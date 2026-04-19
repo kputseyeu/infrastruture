@@ -1,0 +1,28 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/YOUR-ORG/simple-app
+  tag: latest
+  pullPolicy: Always
+imagePullSecrets:
+- name: ghcr-credentials
+
+vault:
+  address: "http://vault:8080"
+  token: ""
+  secretPath: "secret/data/myapp/config"
+
+externalSecrets:
+  enabled: true
+  secretStore:
+    name: vault-backend
+    kind: ClusterSecretStore
+  remoteRef:
+    key: "secret/data/myapp/config"
+    property: "VAULT_TOKEN"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80

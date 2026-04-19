@@ -1,0 +1,65 @@
+replicaCount: 2
+
+image:
+  repository: simple-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+vault:
+  address: "http://vault:8080"
+  token: ""
+  secretPath: "secret/data/myapp/config"
+
+externalSecrets:
+  enabled: false
+  secretStore:
+    name: vault-backend
+    kind: ClusterSecretStore
+  remoteRef:
+    key: "secret/data/myapp/config"
+    property: "VAULT_TOKEN"
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /api/status
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/status
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

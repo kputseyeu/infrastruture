@@ -1,0 +1,8 @@
+apiVersion: v2
+name: simple-app
+description: Simple authentication app with OpenBao integration
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: kirylputseyeu

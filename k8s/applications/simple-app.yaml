@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-app
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: simple-app=docker.io/kirylputseyeu/simple-app
+    argocd-image-updater.argoproj.io/simple-app.helm.image-name: image.repository
+    argocd-image-updater.argoproj.io/simple-app.helm.image-tag: image.tag
+    argocd-image-updater.argoproj.io/simple-app.allow-tags: regexp:^v\d+\.\d+\.\d+$
+    argocd-image-updater.argoproj.io/simple-app.update-strategy: semver
+    argocd-image-updater.argoproj.io/write-back-method: git:repocred
+    argocd-image-updater.argoproj.io/git-repository: https://github.com/kirylputseyeu/develop-platform.git
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/simple-app.pull-secret: pullsecret:argocd/docker-registry-creds
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/kirylputseyeu/develop-platform.git
+    targetRevision: main
+    path: helm/simple-app
+    helm:
+      valueFiles:
+        - values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

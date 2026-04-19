@@ -1,0 +1,58 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+*.tfvars
+!terraform.tfvars.example
+crash.log
+.crash.log
+
+# Kubespray
+kubespray/venv/
+kubespray/.cache/
+kubespray/__pycache__/
+kubespray/*.pyc
+kubespray/inventory/mycluster/cluster.yml
+kubespray/inventory/mycluster/group_vars/
+
+# Kubernetes
+*.kubeconfig
+kubeconfig
+
+# Secrets & Credentials
+*.pem
+*.key
+*.p12
+*.jks
+credentials.json
+service-account.json
+*.env
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Helm
+helm/*/charts/
+helm/*/tmp/
+
+# ArgoCD local cache
+.argocd/
+
+# Backup files
+*.bak
+*.backup
+kubespray/

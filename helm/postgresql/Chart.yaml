@@ -1,0 +1,8 @@
+apiVersion: v2
+name: postgresql
+description: PostgreSQL database with local-path storage
+type: application
+version: 0.1.0
+appVersion: "16.4"
+maintainers:
+  - name: kirylputseyeu

@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: simple-app
+  tag: dev
+  pullPolicy: Always
+
+vault:
+  address: "http://vault:8080"
+  token: "s.GD2E5hM9TCpUjNlBBxBVQSVa"
+  secretPath: "secret/data/myapp/config"
+
+externalSecrets:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi

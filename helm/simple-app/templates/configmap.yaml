@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "simple-app.fullname" . }}-config
+  labels:
+    {{- include "simple-app.labels" . | nindent 4 }}
+data:
+  VAULT_ADDR: {{ .Values.vault.address | quote }}
+  VAULT_SECRET_PATH: {{ .Values.vault.secretPath | quote }}
