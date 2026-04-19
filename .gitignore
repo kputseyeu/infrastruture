@@ -57,3 +57,4 @@ helm/*/tmp/
 *.backup
 kubespray/
 bao/
+k8s/secrets/

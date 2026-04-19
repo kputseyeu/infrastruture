@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/kirylputseyeu/develop-platform.git
+    repoURL: https://github.com/kputseyeu/infrastruture.git
     targetRevision: main
     path: helm/postgresql
   destination:

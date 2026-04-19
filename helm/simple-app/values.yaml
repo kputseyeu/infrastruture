@@ -22,11 +22,10 @@ vault:
 externalSecrets:
   enabled: false
   secretStore:
-    name: vault-backend
-    kind: ClusterSecretStore
-  remoteRef:
-    key: "secret/data/myapp/config"
-    property: "VAULT_TOKEN"
+    name: openbao-backend
+    kind: SecretStore
+  refreshInterval: "5m"
+  data: []
 
 resources:
   limits:

@@ -65,6 +65,21 @@ resource "google_compute_firewall" "ssh_bastion" {
   target_tags   = ["bastion"]
 }
 
+# --- Firewall: HTTPS to Bastion (Ingress Controller) ---
+
+resource "google_compute_firewall" "https_bastion" {
+  name    = "allow-https-bastion"
+  network = google_compute_network.vpc.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["bastion"]
+}
+
 # --- Firewall: SSH from Bastion to internal nodes ---
 
 resource "google_compute_firewall" "ssh_internal" {
@@ -189,6 +204,21 @@ resource "google_compute_firewall" "k8s_nodeport" {
   }
 
   source_tags = ["control-plane", "worker"]
+  target_tags = ["worker"]
+}
+
+# --- Firewall: NodePort from Bastion (for Ingress) ---
+
+resource "google_compute_firewall" "k8s_nodeport_bastion" {
+  name    = "allow-k8s-nodeport-from-bastion"
+  network = google_compute_network.vpc.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["30000-32767"]
+  }
+
+  source_tags = ["bastion"]
   target_tags = ["worker"]
 }
 

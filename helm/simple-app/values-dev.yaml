@@ -1,17 +1,45 @@
 replicaCount: 1
 
 image:
-  repository: simple-app
-  tag: dev
+  repository: ghcr.io/kputseyeu/simple-app
+  tag: latest
   pullPolicy: Always
 
+imagePullSecrets:
+- name: ghcr-creds
+
 vault:
-  address: "http://vault:8080"
-  token: "s.GD2E5hM9TCpUjNlBBxBVQSVa"
-  secretPath: "secret/data/myapp/config"
+  address: ""
+  token: ""
+  secretPath: ""
 
 externalSecrets:
-  enabled: false
+  enabled: true
+  secretStore:
+    name: openbao-backend
+    kind: SecretStore
+  refreshInterval: "5m"
+  data:
+    - secretKey: DB_HOST
+      remoteRef:
+        key: "simple-app/db"
+        property: host
+    - secretKey: DB_PORT
+      remoteRef:
+        key: "simple-app/db"
+        property: port
+    - secretKey: DB_NAME
+      remoteRef:
+        key: "simple-app/db"
+        property: database
+    - secretKey: DB_USER
+      remoteRef:
+        key: "simple-app/db"
+        property: user
+    - secretKey: DB_PASSWORD
+      remoteRef:
+        key: "simple-app/db"
+        property: password
 
 resources:
   limits:
@@ -20,3 +48,15 @@ resources:
   requests:
     cpu: 50m
     memory: 64Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+  - host: app.35.246.211.116.nip.io
+    paths:
+    - path: /
+      pathType: Prefix
+  tls: []
