@@ -113,3 +113,11 @@ variable "bastion_nodes" {
   type        = list(string)
   default     = ["bastion-01", "bastion-02"]
 }
+
+# --- SSH ---
+
+variable "ssh_public_key" {
+  description = "SSH public key content for instance access"
+  type        = string
+  sensitive   = true
+}

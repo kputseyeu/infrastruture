@@ -56,3 +56,4 @@ helm/*/tmp/
 *.bak
 *.backup
 kubespray/
+bao/

@@ -98,7 +98,7 @@ resource "google_compute_instance" "node" {
   }
 
   metadata = {
-    ssh-keys = "jollywonka:${file("~/.ssh/k8s.key.pub")}"
+    ssh-keys = "jollywonka:${var.ssh_public_key}"
   }
 
   service_account {
