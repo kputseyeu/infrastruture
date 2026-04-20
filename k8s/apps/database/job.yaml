@@ -5,6 +5,9 @@ metadata:
   namespace: default
   labels:
     app: liquibase
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   backoffLimit: 3
   template:
