@@ -25,23 +25,16 @@ spec:
               git clone --depth 1 https://github.com/kputseyeu/infrastruture.git /tmp/repo
               cp -r /tmp/repo/database/changelog /changelog
               cp /tmp/repo/database/db.changelog-master.yaml /changelog/
+              wget -q https://jdbc.postgresql.org/download/postgresql-42.7.3.jar -O /changelog/postgresql.jar
           volumeMounts:
             - name: changelog
               mountPath: /changelog
-        - name: download-pg-driver
-          image: alpine/curl:latest
-          command: ["sh", "-c"]
-          args:
-            - |
-              curl -sL https://jdbc.postgresql.org/download/postgresql-42.7.3.jar -o /drivers/postgresql.jar
-          volumeMounts:
-            - name: drivers
-              mountPath: /drivers
       containers:
         - name: liquibase
           image: liquibase/liquibase:latest
           command: ["liquibase"]
           args:
+            - "--classpath=/liquibase/changelog"
             - "--changelog-file=db.changelog-master.yaml"
             - "--url=jdbc:postgresql://$(DB_HOST):5432/$(DB_NAME)"
             - "--username=$(DB_USER)"
@@ -65,10 +58,6 @@ spec:
           volumeMounts:
             - name: changelog
               mountPath: /liquibase/changelog
-            - name: drivers
-              mountPath: /liquibase/lib
       volumes:
         - name: changelog
-          emptyDir: {}
-        - name: drivers
           emptyDir: {}
