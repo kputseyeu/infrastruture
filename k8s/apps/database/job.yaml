@@ -44,10 +44,7 @@ spec:
             - name: DB_NAME
               value: appdb
             - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgresql-credentials
-                  key: username
+              value: appuser
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
