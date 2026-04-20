@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: liquibase-migration
+  namespace: default
+  labels:
+    app: liquibase
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: liquibase
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: clone-changelog
+          image: alpine/git:latest
+          command: ["sh", "-c"]
+          args:
+            - |
+              git clone --depth 1 https://github.com/kputseyeu/infrastruture.git /tmp/repo
+              cp -r /tmp/repo/database/changelog /changelog
+              cp /tmp/repo/database/db.changelog-master.yaml /changelog/
+          volumeMounts:
+            - name: changelog
+              mountPath: /changelog
+      containers:
+        - name: liquibase
+          image: liquibase/liquibase:latest
+          command: ["liquibase"]
+          args:
+            - "--changelog-file=db.changelog-master.yaml"
+            - "--url=jdbc:postgresql://$(DB_HOST):5432/$(DB_NAME)"
+            - "--username=$(DB_USER)"
+            - "--password=$(DB_PASSWORD)"
+            - update
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-credentials
+                  key: host
+            - name: DB_NAME
+              value: appdb
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-credentials
+                  key: password
+          volumeMounts:
+            - name: changelog
+              mountPath: /liquibase/changelog
+      volumes:
+        - name: changelog
+          emptyDir: {}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liquibase-changelog
+  namespace: default
+  labels:
+    app: liquibase
+data:
+  db.changelog-master.yaml: |
+    databaseChangeLog:
+      - includeAll:
+          path: changelog/

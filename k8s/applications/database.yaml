@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: database-migrations
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/kputseyeu/infrastruture.git
+    targetRevision: main
+    path: k8s/apps/database
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
