@@ -28,6 +28,15 @@ spec:
           volumeMounts:
             - name: changelog
               mountPath: /changelog
+        - name: download-pg-driver
+          image: alpine/curl:latest
+          command: ["sh", "-c"]
+          args:
+            - |
+              curl -sL https://jdbc.postgresql.org/download/postgresql-42.7.3.jar -o /drivers/postgresql.jar
+          volumeMounts:
+            - name: drivers
+              mountPath: /drivers
       containers:
         - name: liquibase
           image: liquibase/liquibase:latest
@@ -56,6 +65,10 @@ spec:
           volumeMounts:
             - name: changelog
               mountPath: /liquibase/changelog
+            - name: drivers
+              mountPath: /liquibase/lib
       volumes:
         - name: changelog
+          emptyDir: {}
+        - name: drivers
           emptyDir: {}
